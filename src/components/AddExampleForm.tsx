@@ -12,12 +12,13 @@ interface Props {
 
 const BLOCK_TYPES = Object.keys(BLOCK_LABELS) as BlockType[];
 
-// Pre-fill new examples with the template's structure so the user just fills
-// in copy against the recommended skeleton.
-function blocksFromStructure(template: Template): ExampleBlock[] {
-  return template.structure
-    .filter((s) => !s.optional)
-    .map((s) => ({ type: s.type, label: s.label.split(' — ')[0].split(' - ')[0].trim(), content: '' }));
+// A sensible generalized starting point: one H1, one H2, one paragraph.
+function starterBlocks(): ExampleBlock[] {
+  return [
+    { type: 'H1', content: '' },
+    { type: 'H2', content: '' },
+    { type: 'Paragraph', content: '' },
+  ];
 }
 
 export function AddExampleForm({ template, initial, onSave, onCancel }: Props) {
@@ -27,7 +28,7 @@ export function AddExampleForm({ template, initial, onSave, onCancel }: Props) {
   const [notes, setNotes] = useState(initial?.notes ?? '');
   const [approved, setApproved] = useState(initial?.approved ?? true);
   const [blocks, setBlocks] = useState<ExampleBlock[]>(
-    initial ? initial.blocks.map((b) => ({ ...b })) : blocksFromStructure(template),
+    initial ? initial.blocks.map((b) => ({ ...b })) : starterBlocks(),
   );
 
   function updateBlock(i: number, patch: Partial<ExampleBlock>) {
@@ -44,8 +45,8 @@ export function AddExampleForm({ template, initial, onSave, onCancel }: Props) {
     });
   }
 
-  function addBlock() {
-    setBlocks((prev) => [...prev, { type: 'Description', label: '', content: '' }]);
+  function addBlock(type: BlockType) {
+    setBlocks((prev) => [...prev, { type, content: '' }]);
   }
 
   function removeBlock(i: number) {
@@ -62,7 +63,7 @@ export function AddExampleForm({ template, initial, onSave, onCancel }: Props) {
       source: source.trim() || undefined,
       notes: notes.trim() || undefined,
       approved,
-      blocks: filled.map((b) => ({ type: b.type, label: b.label?.trim() || undefined, content: b.content.trim() })),
+      blocks: filled.map((b) => ({ type: b.type, content: b.content.trim() })),
       userAdded: true,
     };
     onSave(example);
@@ -72,7 +73,9 @@ export function AddExampleForm({ template, initial, onSave, onCancel }: Props) {
     <form className="add-form" onSubmit={handleSubmit}>
       <h3 className="add-form__title">{isEdit ? 'Edit example' : 'Add an example'}</h3>
       <p className="add-form__hint">
-        Filling in copy against the <strong>{template.name}</strong> structure. Leave a block blank to skip it.
+        Example for <strong>{template.name}</strong>. Build the copy as an outline: an{' '}
+        <strong>H1</strong>, then <strong>H2</strong> sections with <strong>paragraphs</strong>{' '}
+        beneath. Leave a block blank to skip it.
       </p>
 
       <div className="field-row">
@@ -98,7 +101,7 @@ export function AddExampleForm({ template, initial, onSave, onCancel }: Props) {
 
       <div className="add-form__blocks">
         {blocks.map((block, i) => (
-          <div className="add-block" key={i}>
+          <div className={`add-block add-block--${block.type.toLowerCase()}`} key={i}>
             <div className="add-block__controls">
               <select
                 value={block.type}
@@ -111,12 +114,6 @@ export function AddExampleForm({ template, initial, onSave, onCancel }: Props) {
                   </option>
                 ))}
               </select>
-              <input
-                className="add-block__label"
-                value={block.label ?? ''}
-                onChange={(e) => updateBlock(i, { label: e.target.value })}
-                placeholder="Label (optional, e.g. H2 - First)"
-              />
               <div className="add-block__buttons">
                 <button type="button" onClick={() => moveBlock(i, -1)} aria-label="Move up" title="Move up">↑</button>
                 <button type="button" onClick={() => moveBlock(i, 1)} aria-label="Move down" title="Move down">↓</button>
@@ -126,16 +123,19 @@ export function AddExampleForm({ template, initial, onSave, onCancel }: Props) {
             <textarea
               value={block.content}
               onChange={(e) => updateBlock(i, { content: e.target.value })}
-              placeholder="Copy for this block…"
-              rows={2}
+              placeholder={block.type === 'Paragraph' ? 'Paragraph copy…' : `${block.type} text…`}
+              rows={block.type === 'Paragraph' ? 3 : 1}
             />
           </div>
         ))}
       </div>
 
-      <button type="button" className="text-btn" onClick={addBlock}>
-        + Add block
-      </button>
+      <div className="add-form__addrow">
+        <span>Add:</span>
+        <button type="button" className="text-btn" onClick={() => addBlock('H2')}>+ H2</button>
+        <button type="button" className="text-btn" onClick={() => addBlock('H3')}>+ H3</button>
+        <button type="button" className="text-btn" onClick={() => addBlock('Paragraph')}>+ Paragraph</button>
+      </div>
 
       <div className="add-form__actions">
         <button type="submit" className="btn btn--primary">

@@ -286,14 +286,7 @@
 .block__tag--h1 { background: #fff1f0; color: #b42318; border-color: #ffd7d2; }
 .block__tag--h2 { background: #fff6e8; color: #b54708; border-color: #ffe4bf; }
 .block__tag--h3 { background: #fefbe8; color: #a16207; border-color: #fdf0b0; }
-.block__tag--description { background: #eef4ff; color: #1d4ed8; border-color: #d3e2ff; }
-.block__tag--tldr { background: #ecfdf3; color: #067647; border-color: #c7ecd6; }
-.block__tag--cta { background: #f4ebff; color: #6941c6; border-color: #e2d1ff; }
-.block__tag--subhead { background: #eef6ff; color: #0b6bcb; border-color: #cfe6ff; }
-.block__tag--list { background: #f0f4f8; color: #364152; border-color: #dbe2ea; }
-.block__tag--quote { background: #f5f3ff; color: #5b21b6; border-color: #e4defb; }
-.block__tag--disclaimer { background: #f8f9fa; color: #667085; border-color: #e6e8eb; }
-.block__tag--byline { background: #f8f9fa; color: #667085; border-color: #e6e8eb; }
+.block__tag--paragraph { background: #eef4ff; color: #1d4ed8; border-color: #d3e2ff; }
 
 /* ---------- Examples ---------- */
 .examples {
@@ -361,32 +354,78 @@
   line-height: 1.5;
 }
 
-.blocks {
+/* Example rendered as a plain document outline. */
+.outline {
   margin-top: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.block {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  padding: 10px 12px;
+  padding: 8px 6px;
 }
 
-.block__meta {
+.node {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 8px;
-  margin-bottom: 6px;
+  border-radius: 6px;
+  padding: 6px 8px;
 }
 
-.block__content {
+.node:hover {
+  background: var(--surface-2);
+}
+
+.node__content {
+  min-width: 0;
+}
+
+.node__h1 {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--text);
+}
+
+.node__h2 {
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+.node__h3 {
   font-size: 14px;
-  line-height: 1.55;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+.node__p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-muted);
   white-space: pre-wrap;
+}
+
+/* Indentation expresses the hierarchy: H2 sit under the H1, paragraphs and
+   H3 sit under their H2. */
+.node--h2 { padding-left: 18px; margin-top: 4px; }
+.node--h3 { padding-left: 34px; }
+.node--p { padding-left: 34px; }
+
+.node__copy {
+  opacity: 0;
+  flex-shrink: 0;
+  transition: opacity 0.12s;
+}
+
+.node:hover .node__copy {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .node__copy { opacity: 1; }
 }
 
 .example-card__foot {
@@ -567,14 +606,25 @@
   gap: 8px;
   margin-bottom: 8px;
   align-items: center;
+  justify-content: space-between;
 }
 
 .add-block__controls select {
-  width: 130px;
+  width: 140px;
 }
 
-.add-block__label {
-  flex: 1;
+/* Indent the editor rows to mirror how the outline will render. */
+.add-block--h2 { margin-left: 16px; }
+.add-block--h3,
+.add-block--paragraph { margin-left: 32px; }
+
+.add-form__addrow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 4px 0 4px;
+  font-size: 13px;
+  color: var(--text-muted);
 }
 
 .add-block__buttons {

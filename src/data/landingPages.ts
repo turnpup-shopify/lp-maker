@@ -1,8 +1,25 @@
-import type { LandingPageType } from '../types';
+import type { LandingPageType, StructureBlock } from '../types';
 
-// Seed library. Copy inside each example is illustrative sample copy meant to
-// show the shape of a good, approved landing page — replace with your own
-// approved copy, or add your own examples in-app.
+// Every template follows the same generalized shape: one H1, an optional
+// intro paragraph, then any number of H2 sections, each with any number of
+// paragraphs beneath it. The guidance below just tailors what each section
+// is for. Copy inside the examples is illustrative sample copy — replace it
+// with your own approved copy, or add your own examples in-app.
+
+function structure(
+  h1: string,
+  intro: string,
+  h2: string,
+  para: string,
+): StructureBlock[] {
+  return [
+    { id: 'h1', type: 'H1', label: 'H1 — the headline', guidance: h1 },
+    { id: 'intro', type: 'Paragraph', label: 'Paragraph — intro', guidance: intro, optional: true },
+    { id: 'h2', type: 'H2', label: 'H2 — a section', guidance: h2, repeatable: true },
+    { id: 'para', type: 'Paragraph', label: 'Paragraph — under each H2', guidance: para, repeatable: true },
+  ];
+}
+
 export const SEED_DATA: LandingPageType[] = [
   {
     id: 'listicles',
@@ -14,140 +31,55 @@ export const SEED_DATA: LandingPageType[] = [
         id: 'x-reasons-why',
         name: 'X Reasons Why',
         summary:
-          'A single promise up top, then N discrete reasons — each its own H2 + short proof. Reads fast, converts skeptics by stacking small yeses.',
-        structure: [
-          {
-            id: 'h1',
-            type: 'H1',
-            label: 'H1 — The core promise',
-            guidance:
-              'State the number and the payoff. Include the count ("7 Reasons…") so the reader knows the scope. Lead with benefit, not product.',
-          },
-          {
-            id: 'desc',
-            type: 'Description',
-            label: 'Description — Intro / context',
-            guidance:
-              'Two to three sentences that frame the problem and tee up the list. Name who this is for and the tension the reasons resolve.',
-          },
-          {
-            id: 'tldr',
-            type: 'TLDR',
-            label: 'TL;DR summary',
-            guidance:
-              'A one-glance recap for skimmers. Bullet the reasons or give the single strongest takeaway + CTA. Many readers decide here.',
-          },
-          {
-            id: 'h2-first',
-            type: 'H2',
-            label: 'H2 — Reason #1',
-            guidance:
-              'Lead with your strongest reason. Make the H2 a complete, benefit-led claim, not a label.',
-            repeatable: true,
-          },
-          {
-            id: 'desc-first',
-            type: 'Description',
-            label: 'Description — Reason #1 proof',
-            guidance:
-              'Back the claim with a specific proof point: a stat, mechanism, or concrete detail. Keep to 2–4 sentences.',
-            repeatable: true,
-          },
-          {
-            id: 'h2-second',
-            type: 'H2',
-            label: 'H2 — Reason #2',
-            guidance: 'Second-strongest reason. Vary the angle (e.g. from outcome to ease-of-use).',
-            repeatable: true,
-          },
-          {
-            id: 'desc-second',
-            type: 'Description',
-            label: 'Description — Reason #2 proof',
-            guidance: 'Proof for reason #2.',
-            repeatable: true,
-          },
-          {
-            id: 'h2-third',
-            type: 'H2',
-            label: 'H2 — Reason #3 … (repeat for each reason)',
-            guidance:
-              'Continue the H2 + Description pattern for every remaining reason. Aim for 3–7 total. Order by persuasive strength, not chronology.',
-            repeatable: true,
-          },
-          {
-            id: 'cta',
-            type: 'CTA',
-            label: 'CTA — Close',
-            guidance:
-              'Restate the promise and give one clear action. Reduce risk (guarantee, free trial) right next to the button.',
-          },
-          {
-            id: 'disclaimer',
-            type: 'Disclaimer',
-            label: 'Disclaimer',
-            optional: true,
-            guidance: 'Any required legal, results-vary, or substantiation language.',
-          },
-        ],
+          'A single promise up top, then N discrete reasons — each its own H2 with a short paragraph of proof.',
+        structure: structure(
+          'State the number and the payoff, e.g. "7 Reasons Why…". Lead with benefit.',
+          'Frame the problem and tee up the list in a sentence or two.',
+          'One H2 per reason, ordered strongest first. Make it a benefit-led claim.',
+          'Back the reason with one concrete proof point (a stat, mechanism, or detail).',
+        ),
         examples: [
           {
             id: 'ex-reasons-sleep',
             title: '5 Reasons Why (sleep supplement — sample)',
-            source: 'Sample copy · paid social → advertorial',
+            source: 'Sample copy',
             approved: true,
-            notes:
-              'Strongest reason first (falling asleep faster), each proof point is concrete and specific. TL;DR carries the whole pitch for skimmers.',
+            notes: 'Strongest reason first; each H2 is a claim, each paragraph is one concrete proof.',
             blocks: [
+              { type: 'H1', content: '5 Reasons Why People Are Switching to a Drug-Free Sleep Routine' },
               {
-                type: 'H1',
-                content: '5 Reasons Why People Are Switching to a Drug-Free Sleep Routine',
-              },
-              {
-                type: 'Description',
+                type: 'Paragraph',
                 content:
-                  'If you lie awake replaying your day — or wake at 3am and can’t drift back off — you’re not broken, and you don’t need another prescription. Here are five reasons thousands are rebuilding their nights around a simple nightly ritual instead.',
+                  'If you lie awake replaying your day — or wake at 3am and can’t drift back off — you don’t need another prescription. Here’s why thousands are rebuilding their nights around a simple nightly ritual instead.',
               },
+              { type: 'H2', content: 'You fall asleep faster — without feeling drugged' },
               {
-                type: 'TLDR',
+                type: 'Paragraph',
                 content:
-                  'TL;DR: Falls asleep faster, no morning grogginess, non-habit-forming, backed by a 60-night guarantee, and costs less than your daily coffee. Skip to the routine →',
+                  'The blend leans on magnesium glycinate and L-theanine to quiet a racing mind rather than sedate you. Most people drift off in under 20 minutes within the first week.',
               },
-              { type: 'H2', label: 'H2 - First', content: '1. You fall asleep faster — without feeling drugged' },
+              { type: 'H2', content: 'You wake up clear, not groggy' },
               {
-                type: 'Description',
+                type: 'Paragraph',
                 content:
-                  'The blend leans on magnesium glycinate and L-theanine, which help quiet a racing mind rather than sedate you. Most people report drifting off in under 20 minutes within the first week.',
+                  'Because it works with your body’s own wind-down signals instead of overriding them, there’s no morning fog — the complaint that makes people quit sleep aids.',
               },
-              { type: 'H2', label: 'H2 - Second', content: '2. You wake up clear, not groggy' },
+              { type: 'H2', content: 'It’s non-habit-forming' },
               {
-                type: 'Description',
+                type: 'Paragraph',
                 content:
-                  'Because it works with your body’s own wind-down signals instead of overriding them, there’s no morning fog — the complaint that makes people quit sleep aids in the first place.',
+                  'No dependency, no escalating doses, nothing to taper off. Use it every night or only on the rough ones.',
               },
-              { type: 'H2', label: 'H2 - Third', content: '3. It’s non-habit-forming' },
+              { type: 'H2', content: 'You’re not risking anything to try it' },
               {
-                type: 'Description',
-                content:
-                  'No dependency, no escalating doses, nothing to taper off. Use it every night or only on the rough ones — your call.',
-              },
-              { type: 'H2', label: 'H2 - Fourth', content: '4. You’re not risking anything to try it' },
-              {
-                type: 'Description',
+                type: 'Paragraph',
                 content:
                   'Every order is backed by a 60-night guarantee. Sleep on it for two months; if your nights aren’t better, get every penny back.',
               },
-              { type: 'H2', label: 'H2 - Fifth', content: '5. It costs less than your morning coffee' },
+              { type: 'H2', content: 'It costs less than your morning coffee' },
               {
-                type: 'Description',
-                content:
-                  'At about a dollar a night, better sleep costs less than the drink you reach for because you slept badly.',
-              },
-              { type: 'CTA', content: 'Start your first 60 nights →  (Free shipping · 60-night money-back guarantee)' },
-              {
-                type: 'Disclaimer',
-                content:
-                  'These statements have not been evaluated by the FDA. This product is not intended to diagnose, treat, cure, or prevent any disease. Individual results vary.',
+                type: 'Paragraph',
+                content: 'At about a dollar a night, better sleep costs less than the drink you reach for because you slept badly.',
               },
             ],
           },
@@ -156,23 +88,48 @@ export const SEED_DATA: LandingPageType[] = [
       {
         id: 'best-x-for-y',
         name: 'Best X for Y (Roundup)',
-        summary:
-          'A ranked roundup that positions your product as the top pick among options. Trades on the reader’s "help me choose" intent.',
-        structure: [
+        summary: 'A ranked roundup that positions your product as the top pick among options.',
+        structure: structure(
+          'Name the category and reader, e.g. "The 6 Best X for Y".',
+          'Say briefly how the picks were chosen — credibility is everything in a roundup.',
+          'One H2 per pick, each with a superlative ("Best overall", "Best budget").',
+          'Who the pick is for, its standout feature, and one honest limitation.',
+        ),
+        examples: [
           {
-            id: 'h1',
-            type: 'H1',
-            label: 'H1 — The roundup promise',
-            guidance: 'Name the category and the reader ("The 6 Best X for Y in {year}"). Signal it’s a comparison.',
+            id: 'ex-roundup-blender',
+            title: 'Best blenders roundup (sample)',
+            source: 'Sample copy',
+            approved: true,
+            notes: 'Top pick first; each section names who it’s for and stays honest so #1 shines fairly.',
+            blocks: [
+              { type: 'H1', content: 'The 5 Best Blenders for Daily Smoothies in 2026' },
+              {
+                type: 'Paragraph',
+                content:
+                  'We ran twelve blenders through a month of morning smoothies, frozen fruit, and leafy greens. These five came out ahead — starting with the one we’d buy again.',
+              },
+              { type: 'H2', content: 'Best overall: the everyday workhorse' },
+              {
+                type: 'Paragraph',
+                content:
+                  'It crushed frozen berries and ice without leaving grit, and the jar wiped clean in seconds. Pricier than most here, but the one we reached for every morning.',
+              },
+              { type: 'H2', content: 'Best budget: nearly as good for half the price' },
+              {
+                type: 'Paragraph',
+                content:
+                  'Handles daily smoothies without complaint. The motor slows on very thick frozen blends, so add a splash more liquid.',
+              },
+              { type: 'H2', content: 'Best for small kitchens: compact and quiet' },
+              {
+                type: 'Paragraph',
+                content:
+                  'A personal-size jar that blends to-go and tucks into a drawer. Not built for big batches, but ideal for one.',
+              },
+            ],
           },
-          { id: 'desc', type: 'Description', label: 'Description — Methodology / why trust this', guidance: 'Briefly say how picks were made. Credibility is the whole game for roundups.' },
-          { id: 'tldr', type: 'TLDR', label: 'TL;DR — Top pick', guidance: 'Name the #1 pick and who each runner-up is best for.' },
-          { id: 'pick-1-h2', type: 'H2', label: 'H2 — #1 pick (Best overall)', guidance: 'Your product. Lead with the single reason it wins.', repeatable: true },
-          { id: 'pick-1-desc', type: 'Description', label: 'Description — #1 pick', guidance: 'Who it’s for, standout feature, one honest limitation for credibility.', repeatable: true },
-          { id: 'pick-n', type: 'H2', label: 'H2 — Remaining picks (repeat)', guidance: 'Give each a superlative ("Best budget", "Best for X"). Keep them real so #1 shines fairly.', repeatable: true },
-          { id: 'cta', type: 'CTA', label: 'CTA — Shop the top pick', guidance: 'Point at the #1 pick with a low-friction action.' },
         ],
-        examples: [],
       },
     ],
   },
@@ -185,55 +142,43 @@ export const SEED_DATA: LandingPageType[] = [
       {
         id: 'story-based',
         name: 'Story-Based Advertorial',
-        summary:
-          'First-person discovery story: a relatable person hits a wall, tries the usual fixes, then finds the product. Sells through narrative, not claims.',
-        structure: [
-          { id: 'h1', type: 'H1', label: 'H1 — Curiosity headline', guidance: 'Editorial, story-forward, benefit implied. Avoid looking like an ad ("Why I finally stopped…").' },
-          { id: 'byline', type: 'Byline', label: 'Byline / dateline', optional: true, guidance: 'Author + date. Reinforces the editorial frame.' },
-          { id: 'subhead', type: 'Subhead', label: 'Subhead — The hook', guidance: 'One line that raises the stakes or the question the story answers.' },
-          { id: 'hook', type: 'Description', label: 'Description — The relatable problem', guidance: 'Open in-scene with a specific, sensory moment. Reader should think "that’s me".' },
-          { id: 'struggle', type: 'Description', label: 'Description — Failed attempts', guidance: 'The things they tried that didn’t work. Builds tension and pre-handles objections.' },
-          { id: 'discovery', type: 'H2', label: 'H2 — The turning point', guidance: 'Introduce the product as the discovery — the moment the story changes.' },
-          { id: 'mechanism', type: 'Description', label: 'Description — Why it worked', guidance: 'Explain the mechanism plainly. This is where story becomes reason-to-believe.' },
-          { id: 'proof', type: 'Quote', label: 'Quote — Social proof', optional: true, guidance: 'A short testimonial or result that echoes the reader’s situation.' },
-          { id: 'cta', type: 'CTA', label: 'CTA — Soft close', guidance: 'Invitation, not a hard sell. Tie the action back to the story’s payoff.' },
-          { id: 'disclaimer', type: 'Disclaimer', label: 'Advertorial disclosure', guidance: 'Required "Advertisement" / sponsored disclosure and any results-vary language.' },
-        ],
+        summary: 'A first-person discovery story: a relatable problem, failed fixes, then the product as the turning point.',
+        structure: structure(
+          'An editorial, curiosity-driven headline. Avoid looking like an ad.',
+          'Open in-scene with a specific, relatable moment. The reader should think "that’s me".',
+          'Each H2 moves the story forward — the failed attempts, the turning point, the result.',
+          'Tell that beat of the story plainly; let the product emerge as the discovery.',
+        ),
         examples: [
           {
             id: 'ex-adv-skincare',
             title: 'Story advertorial (skincare — sample)',
-            source: 'Sample copy · native ad → advertorial',
+            source: 'Sample copy',
             approved: true,
-            notes:
-              'Opens in-scene, lists failed fixes (pre-handles objections), then bridges to mechanism. Disclosure present up top.',
+            notes: 'Opens in-scene, lists failed fixes to pre-handle objections, then bridges to the mechanism.',
             blocks: [
-              { type: 'Disclaimer', content: 'Advertisement' },
               { type: 'H1', content: 'I Tried Everything for My Dry Winter Skin — Here’s the Only Thing That Finally Stuck' },
-              { type: 'Byline', content: 'By Jordan Ellis · Updated March 2026' },
-              { type: 'Subhead', content: 'After a decade of $60 creams that quit by noon, a dermatologist’s offhand comment changed my whole routine.' },
               {
-                type: 'Description',
+                type: 'Paragraph',
                 content:
                   'Every January my hands would crack at the knuckles — the kind of dry that stings when you wash a dish. I’d slather on lotion after lotion and by lunch it was like I’d applied nothing at all.',
               },
               {
-                type: 'Description',
+                type: 'Paragraph',
                 content:
                   'I tried the drugstore stuff, the luxury stuff, the "clinical" stuff. Some felt nice for an hour. None of them lasted, and a few left my skin feeling tight and worse than before.',
               },
               { type: 'H2', content: 'Then a dermatologist told me I was moisturizing backwards' },
               {
-                type: 'Description',
+                type: 'Paragraph',
                 content:
-                  'The problem wasn’t hydration — it was that nothing was holding it in. The fix was a barrier cream with ceramides and squalane that seals moisture in overnight instead of letting it evaporate. First morning after using it, my hands were still soft. That had never happened.',
+                  'The problem wasn’t hydration — it was that nothing was holding it in. The fix was a barrier cream with ceramides and squalane that seals moisture in overnight instead of letting it evaporate.',
               },
-              { type: 'Quote', content: '"Three weeks in and I’ve stopped buying lotion entirely. I use it at night and I’m set until morning." — verified customer' },
-              { type: 'CTA', content: 'See the overnight barrier cream →' },
+              { type: 'H2', content: 'The first morning it actually worked' },
               {
-                type: 'Disclaimer',
+                type: 'Paragraph',
                 content:
-                  'Results vary from person to person. This is an advertisement and the author was compensated. Not intended to treat any medical condition.',
+                  'I woke up and my hands were still soft. That had never happened. Three weeks later I’ve stopped buying lotion entirely — I use it at night and I’m set until morning.',
               },
             ],
           },
@@ -242,18 +187,42 @@ export const SEED_DATA: LandingPageType[] = [
       {
         id: 'pas-advertorial',
         name: 'Problem–Agitate–Solve',
-        summary:
-          'The classic PAS structure in editorial clothing: name the problem, twist the knife, then present the solution as relief.',
-        structure: [
-          { id: 'h1', type: 'H1', label: 'H1 — Name the problem', guidance: 'Call out the exact pain in the reader’s words.' },
-          { id: 'problem', type: 'Description', label: 'Description — Problem', guidance: 'Describe the problem so precisely the reader feels seen.' },
-          { id: 'agitate', type: 'H2', label: 'H2 — Agitate (the hidden cost)', guidance: 'Show what it’s really costing them — time, money, confidence, health.' },
-          { id: 'agitate-desc', type: 'Description', label: 'Description — Why it gets worse', guidance: 'Escalate. What happens if nothing changes?' },
-          { id: 'solve', type: 'H2', label: 'H2 — Solve', guidance: 'Introduce the product as the turn from tension to relief.' },
-          { id: 'solve-desc', type: 'Description', label: 'Description — How it solves it', guidance: 'Mechanism + the fastest proof you have.' },
-          { id: 'cta', type: 'CTA', label: 'CTA', guidance: 'Clear action with risk reversal.' },
+        summary: 'Name the problem, show what it’s really costing, then present the product as relief.',
+        structure: structure(
+          'Call out the exact pain in the reader’s own words.',
+          'Describe the problem so precisely the reader feels seen.',
+          'Each H2 is a beat: the problem, the hidden cost, the solution.',
+          'Escalate the stakes, then turn to how the product resolves them.',
+        ),
+        examples: [
+          {
+            id: 'ex-pas-posture',
+            title: 'PAS advertorial (posture — sample)',
+            source: 'Sample copy',
+            approved: true,
+            notes: 'Problem → agitate the hidden cost → solve, one H2 per beat.',
+            blocks: [
+              { type: 'H1', content: 'That Nagging Upper-Back Ache Isn’t "Just Getting Older"' },
+              {
+                type: 'Paragraph',
+                content:
+                  'By mid-afternoon your shoulders creep toward the screen and the ache between your shoulder blades sets in. You stretch, you forget, it comes back.',
+              },
+              { type: 'H2', content: 'It’s quietly costing you more than comfort' },
+              {
+                type: 'Paragraph',
+                content:
+                  'Slouched hours compound into stiffer mornings, worse sleep, and the low-grade fatigue that makes everything harder. Left alone, it rarely fixes itself.',
+              },
+              { type: 'H2', content: 'The fix is a gentle reminder, not another gadget' },
+              {
+                type: 'Paragraph',
+                content:
+                  'A lightweight posture trainer buzzes softly when you slump, so you correct in the moment and build the habit in a couple of weeks — no rigid brace, no app to babysit.',
+              },
+            ],
+          },
         ],
-        examples: [],
       },
     ],
   },
@@ -261,46 +230,100 @@ export const SEED_DATA: LandingPageType[] = [
     id: 'comparison',
     name: 'Comparison / Alternative',
     description:
-      'Head-to-head pages aimed at buyers who are already evaluating options ("Brand A vs Brand B", "the best alternative to…"). High intent, high converting.',
+      'Head-to-head pages aimed at buyers already evaluating options ("A vs B", "the best alternative to…"). High intent, high converting.',
     templates: [
       {
         id: 'vs-page',
         name: 'A vs B',
-        summary:
-          'Directly compares your product to a named competitor across the criteria buyers actually weigh. Wins the "which one" search.',
-        structure: [
-          { id: 'h1', type: 'H1', label: 'H1 — The matchup', guidance: '"{You} vs {Competitor}: Which is right for you?" Neutral-sounding earns trust.' },
-          { id: 'desc', type: 'Description', label: 'Description — Framing', guidance: 'Acknowledge both are good; frame it as fit, not winner-take-all.' },
-          { id: 'tldr', type: 'TLDR', label: 'TL;DR — Bottom line', guidance: 'One line: who should pick you, who should pick them. Honesty here builds credibility.' },
-          { id: 'criteria', type: 'H2', label: 'H2 — Criterion (repeat per dimension)', guidance: 'One H2 per decision factor (price, speed, support…). Concede where they win.', repeatable: true },
-          { id: 'criteria-desc', type: 'Description', label: 'Description — Head-to-head', guidance: 'Specific, fair comparison for that criterion.', repeatable: true },
-          { id: 'cta', type: 'CTA', label: 'CTA — For the right reader', guidance: 'CTA framed for the buyer you’re the better fit for.' },
+        summary: 'Compares your product to a named competitor across the criteria buyers actually weigh.',
+        structure: structure(
+          'A neutral-sounding matchup, e.g. "You vs Competitor: which is right for you?".',
+          'Acknowledge both are good; frame it as fit, not winner-take-all.',
+          'One H2 per decision factor (price, speed, support…).',
+          'A specific, fair head-to-head for that factor — concede where they win.',
+        ),
+        examples: [
+          {
+            id: 'ex-vs-crm',
+            title: 'A vs B (software — sample)',
+            source: 'Sample copy',
+            approved: true,
+            notes: 'One H2 per criterion; concedes a point to stay credible.',
+            blocks: [
+              { type: 'H1', content: 'Acme vs Bolt: Which Project Tool Is Right for Your Team?' },
+              {
+                type: 'Paragraph',
+                content:
+                  'Both are solid — teams happily use each every day. The right pick depends on how big your team is and how much structure you want.',
+              },
+              { type: 'H2', content: 'Setup and onboarding' },
+              {
+                type: 'Paragraph',
+                content:
+                  'Acme gets a new team running in an afternoon with templates and sensible defaults. Bolt is more configurable up front, which helps large orgs but slows small teams down.',
+              },
+              { type: 'H2', content: 'Price' },
+              {
+                type: 'Paragraph',
+                content:
+                  'Bolt is cheaper at the entry tier — if budget is the deciding factor, they win it. Acme’s value shows up once you’re past a handful of seats.',
+              },
+            ],
+          },
         ],
-        examples: [],
       },
     ],
   },
   {
     id: 'review',
     name: 'Editorial Review',
-    description:
-      'Long-form, credible product reviews that read like a trusted third party put the product through its paces.',
+    description: 'Long-form, credible product reviews that read like a trusted third party put the product through its paces.',
     templates: [
       {
         id: 'product-review',
         name: 'Product Review',
-        summary:
-          'A structured, seemingly-independent review with a verdict, pros/cons, and a hands-on account. Converts research-stage buyers.',
-        structure: [
-          { id: 'h1', type: 'H1', label: 'H1 — Review headline', guidance: '"{Product} Review: Is it worth it in {year}?" Signals a verdict is coming.' },
-          { id: 'verdict', type: 'TLDR', label: 'TL;DR — The verdict + rating', guidance: 'Rating + one-sentence verdict + who it’s for. Reviewers read this first.' },
-          { id: 'pros', type: 'List', label: 'List — Pros', guidance: '3–5 concrete strengths.' },
-          { id: 'cons', type: 'List', label: 'List — Cons', guidance: '1–3 honest drawbacks. Credibility depends on real cons.' },
-          { id: 'hands-on', type: 'H2', label: 'H2 — Hands-on / testing', guidance: 'What using it was actually like. Specifics beat adjectives.' },
-          { id: 'hands-on-desc', type: 'Description', label: 'Description — Experience', guidance: 'Narrate the test with concrete detail and a result.' },
-          { id: 'cta', type: 'CTA', label: 'CTA — Check price / buy', guidance: 'Low-friction action, often "check latest price".' },
+        summary: 'A structured, seemingly-independent review with a verdict and a hands-on account.',
+        structure: structure(
+          'A review headline that signals a verdict, e.g. "X Review: is it worth it?".',
+          'Open with the verdict and who it’s for — reviewers read this first.',
+          'Each H2 is a review section: the good, the drawbacks, the hands-on test.',
+          'Specifics beat adjectives — narrate what using it was actually like.',
+        ),
+        examples: [
+          {
+            id: 'ex-review-headphones',
+            title: 'Product review (headphones — sample)',
+            source: 'Sample copy',
+            approved: true,
+            notes: 'Verdict up top, honest drawback section, concrete hands-on detail.',
+            blocks: [
+              { type: 'H1', content: 'Wave Pro Headphones Review: Worth It in 2026?' },
+              {
+                type: 'Paragraph',
+                content:
+                  'Short version: if you want all-day comfort and strong noise cancelling for the price, these are an easy recommendation. Bass-heads may want to look elsewhere.',
+              },
+              { type: 'H2', content: 'What’s good' },
+              {
+                type: 'Paragraph',
+                content:
+                  'Two weeks of eight-hour days and my ears never got sore. Noise cancelling flattened the coffee-shop hum and a full charge genuinely lasted the workweek.',
+              },
+              { type: 'H2', content: 'The drawbacks' },
+              {
+                type: 'Paragraph',
+                content:
+                  'The bass is polite rather than punchy, and the app’s EQ only partly fixes it. The case is also bigger than it needs to be.',
+              },
+              { type: 'H2', content: 'How they held up day to day' },
+              {
+                type: 'Paragraph',
+                content:
+                  'They paired instantly every morning, survived being crammed into a backpack, and the call quality held up on a windy walk — the test most headphones fail.',
+              },
+            ],
+          },
         ],
-        examples: [],
       },
     ],
   },

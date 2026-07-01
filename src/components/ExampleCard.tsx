@@ -1,4 +1,3 @@
-import { BLOCK_LABELS } from '../types';
 import type { CopyExample } from '../types';
 import { CopyButton } from './CopyButton';
 
@@ -8,12 +7,11 @@ interface Props {
   onEdit?: (example: CopyExample) => void;
 }
 
-// Renders one worked example as a stack of labelled copy blocks, each
-// individually copyable, plus a "copy full example" action.
+// Renders one worked example as a plain document outline: the H1, then H2
+// sections with their paragraphs indented beneath. Each block is copyable on
+// hover, plus a "copy full example" action.
 export function ExampleCard({ example, onDelete, onEdit }: Props) {
-  const fullText = example.blocks
-    .map((b) => `${b.label ?? BLOCK_LABELS[b.type]}\n${b.content}`)
-    .join('\n\n');
+  const fullText = example.blocks.map((b) => b.content).join('\n\n');
 
   return (
     <article className="example-card">
@@ -30,16 +28,16 @@ export function ExampleCard({ example, onDelete, onEdit }: Props) {
 
       {example.notes && <p className="example-card__notes">{example.notes}</p>}
 
-      <div className="blocks">
+      <div className="outline">
         {example.blocks.map((block, i) => (
-          <div className="block" key={i}>
-            <div className="block__meta">
-              <span className={`block__tag block__tag--${block.type.toLowerCase()}`}>
-                {block.label ?? BLOCK_LABELS[block.type]}
-              </span>
-              <CopyButton text={block.content} className="copy-btn--ghost" />
+          <div className={`node node--${block.type.toLowerCase()}`} key={i}>
+            <div className="node__content">
+              {block.type === 'H1' && <p className="node__h1">{block.content}</p>}
+              {block.type === 'H2' && <p className="node__h2">{block.content}</p>}
+              {block.type === 'H3' && <p className="node__h3">{block.content}</p>}
+              {block.type === 'Paragraph' && <p className="node__p">{block.content}</p>}
             </div>
-            <p className="block__content">{block.content}</p>
+            <CopyButton text={block.content} className="copy-btn--ghost node__copy" />
           </div>
         ))}
       </div>

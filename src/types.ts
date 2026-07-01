@@ -1,38 +1,27 @@
 // Core data model for the Landing Page template library.
 
-// The kind of copy block a template section holds. Used both for the
-// template "skeleton" and for the concrete copy inside an example.
-export type BlockType =
-  | 'H1'
-  | 'H2'
-  | 'H3'
-  | 'Description'
-  | 'TLDR'
-  | 'Subhead'
-  | 'List'
-  | 'Quote'
-  | 'CTA'
-  | 'Disclaimer'
-  | 'Byline';
+// A generalized document hierarchy: a single H1, then any number of H2
+// sections, each with any number of paragraphs (and optional H3 subheads)
+// beneath it. Kept deliberately simple so every template and example reads
+// as a plain outline.
+export type BlockType = 'H1' | 'H2' | 'H3' | 'Paragraph';
 
 // A single section in a template's recommended structure.
 export interface StructureBlock {
   id: string;
   type: BlockType;
-  // Human label shown in the outline, e.g. "H2 — First reason".
+  // Human label shown in the outline, e.g. "H2 — a section".
   label: string;
-  // What belongs here + best-practice guidance for writing it.
+  // Short note on what belongs here.
   guidance?: string;
   optional?: boolean;
-  // Sections like "H2 + Description" repeat once per list item.
+  // Sections that repeat (e.g. "an H2 with paragraphs" repeats per section).
   repeatable?: boolean;
 }
 
 // One concrete block of copy inside an example.
 export interface ExampleBlock {
   type: BlockType;
-  // Optional override label, e.g. "H2 - Second".
-  label?: string;
   content: string;
 }
 
@@ -67,17 +56,10 @@ export interface LandingPageType {
   templates: Template[];
 }
 
-// Nice display labels for each block type.
+// Display labels for each block type.
 export const BLOCK_LABELS: Record<BlockType, string> = {
   H1: 'H1',
   H2: 'H2',
   H3: 'H3',
-  Description: 'Description',
-  TLDR: 'TL;DR',
-  Subhead: 'Subhead',
-  List: 'List',
-  Quote: 'Quote',
-  CTA: 'CTA',
-  Disclaimer: 'Disclaimer',
-  Byline: 'Byline',
+  Paragraph: 'Paragraph',
 };

@@ -45,6 +45,28 @@ export function deleteUserExample(templateId: string, exampleId: string): UserEx
   return map;
 }
 
+// Seed examples live in code and can't be removed from the array, so
+// "deleting" one records its id here and the app filters it out on load.
+const DELETED_SEED_KEY = 'lp-maker.deletedSeed.v1';
+
+export function loadDeletedSeed(): string[] {
+  try {
+    const raw = localStorage.getItem(DELETED_SEED_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as string[];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+export function addDeletedSeed(exampleId: string): string[] {
+  const list = loadDeletedSeed();
+  if (!list.includes(exampleId)) list.push(exampleId);
+  localStorage.setItem(DELETED_SEED_KEY, JSON.stringify(list));
+  return list;
+}
+
 // Simple unique id without external deps.
 export function makeId(prefix = 'ex'): string {
   const rand = Math.random().toString(36).slice(2, 8);

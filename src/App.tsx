@@ -4,31 +4,38 @@ import { SEED_DATA } from './data/landingPages';
 import type { CopyExample, LandingPageType } from './types';
 import { Sidebar } from './components/Sidebar';
 import { TemplateView } from './components/TemplateView';
+import { ConfirmModal } from './components/ConfirmModal';
 import {
+  addDeletedSeed,
   addUserExample,
   deleteUserExample,
+  loadDeletedSeed,
   loadUserExamples,
   updateUserExample,
 } from './storage';
 
 type UserMap = Record<string, CopyExample[]>;
 
-// Merge code-managed seed examples with the user's locally-stored ones.
-function mergeData(userMap: UserMap): LandingPageType[] {
+// Merge code-managed seed examples with the user's locally-stored ones,
+// dropping any seed examples the user has deleted.
+function mergeData(userMap: UserMap, deletedSeed: string[]): LandingPageType[] {
+  const deleted = new Set(deletedSeed);
   return SEED_DATA.map((type) => ({
     ...type,
     templates: type.templates.map((tpl) => ({
       ...tpl,
-      examples: [...tpl.examples, ...(userMap[tpl.id] ?? [])],
+      examples: [...tpl.examples.filter((e) => !deleted.has(e.id)), ...(userMap[tpl.id] ?? [])],
     })),
   }));
 }
 
 export default function App() {
   const [userMap, setUserMap] = useState<UserMap>(() => loadUserExamples());
+  const [deletedSeed, setDeletedSeed] = useState<string[]>(() => loadDeletedSeed());
   const [query, setQuery] = useState('');
+  const [pendingDelete, setPendingDelete] = useState<CopyExample | null>(null);
 
-  const types = useMemo(() => mergeData(userMap), [userMap]);
+  const types = useMemo(() => mergeData(userMap, deletedSeed), [userMap, deletedSeed]);
 
   const firstTemplateId = types[0]?.templates[0]?.id ?? null;
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(firstTemplateId);
@@ -50,10 +57,16 @@ export default function App() {
     setUserMap({ ...next });
   }
 
-  function handleDelete(exampleId: string) {
-    if (!selected) return;
-    const next = deleteUserExample(selected.template.id, exampleId);
-    setUserMap({ ...next });
+  // Deletion is confirmed via a modal first.
+  function confirmDelete() {
+    if (!selected || !pendingDelete) return;
+    if (pendingDelete.userAdded) {
+      const next = deleteUserExample(selected.template.id, pendingDelete.id);
+      setUserMap({ ...next });
+    } else {
+      setDeletedSeed([...addDeletedSeed(pendingDelete.id)]);
+    }
+    setPendingDelete(null);
   }
 
   return (
@@ -82,13 +95,23 @@ export default function App() {
               typeName={selected.type.name}
               query={query}
               onSave={handleSave}
-              onDelete={handleDelete}
+              onDelete={(example) => setPendingDelete(example)}
             />
           ) : (
             <p className="empty__hint">Select a template from the left to get started.</p>
           )}
         </div>
       </main>
+
+      {pendingDelete && (
+        <ConfirmModal
+          title="Delete this example?"
+          message="This removes it from your copy library. This can’t be undone."
+          preview={pendingDelete.content}
+          onConfirm={confirmDelete}
+          onCancel={() => setPendingDelete(null)}
+        />
+      )}
     </div>
   );
 }

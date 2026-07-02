@@ -3,7 +3,7 @@ import { CopyButton } from './CopyButton';
 
 interface Props {
   example: CopyExample;
-  onDelete?: (id: string) => void;
+  onDelete?: (example: CopyExample) => void;
   onEdit?: (example: CopyExample) => void;
 }
 
@@ -32,13 +32,13 @@ export function ExampleCard({ example, onDelete, onEdit }: Props) {
             ✎
           </button>
         )}
-        {onDelete && example.userAdded && (
+        {onDelete && (
           <button
             type="button"
             className="icon-btn icon-btn--danger"
             title="Delete"
             aria-label="Delete"
-            onClick={() => onDelete(example.id)}
+            onClick={() => onDelete(example)}
           >
             ✕
           </button>

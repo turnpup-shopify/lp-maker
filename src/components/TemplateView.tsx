@@ -9,7 +9,7 @@ interface Props {
   typeName: string;
   query: string;
   onSave: (example: CopyExample) => void;
-  onDelete: (exampleId: string) => void;
+  onDelete: (example: CopyExample) => void;
 }
 
 function matches(example: CopyExample, q: string): boolean {

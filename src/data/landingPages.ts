@@ -1,17 +1,8 @@
-import type { LandingPageType, StructureBlock } from '../types';
+import type { CopyExample, LandingPageType, StructureBlock } from '../types';
 
-// Every template follows the same generalized shape: one H1, an optional
-// intro paragraph, then any number of H2 sections, each with any number of
-// paragraphs beneath it. The guidance below just tailors what each section
-// is for. Copy inside the examples is illustrative sample copy — replace it
-// with your own approved copy, or add your own examples in-app.
-
-function structure(
-  h1: string,
-  intro: string,
-  h2: string,
-  para: string,
-): StructureBlock[] {
+// Every template shares the same generalized structure outline: an H1, an
+// optional intro paragraph, then repeatable H2 sections with paragraphs.
+function structure(h1: string, intro: string, h2: string, para: string): StructureBlock[] {
   return [
     { id: 'h1', type: 'H1', label: 'H1 — the headline', guidance: h1 },
     { id: 'intro', type: 'Paragraph', label: 'Paragraph — intro', guidance: intro, optional: true },
@@ -20,6 +11,21 @@ function structure(
   ];
 }
 
+// Small helper to build categorized snippet examples for a template.
+let seq = 0;
+function ex(
+  category: CopyExample['category'],
+  content: string,
+  source = 'Sample copy',
+  notes?: string,
+): CopyExample {
+  seq += 1;
+  return { id: `seed-${seq}`, category, content, source, notes, approved: true };
+}
+
+// The examples below are illustrative sample copy grouped by slot — a few
+// approved H1s, H2s, and paragraphs per template. Replace with your own, or
+// add your own in-app.
 export const SEED_DATA: LandingPageType[] = [
   {
     id: 'listicles',
@@ -30,8 +36,7 @@ export const SEED_DATA: LandingPageType[] = [
       {
         id: 'x-reasons-why',
         name: 'X Reasons Why',
-        summary:
-          'A single promise up top, then N discrete reasons — each its own H2 with a short paragraph of proof.',
+        summary: 'A single promise up top, then N discrete reasons — each its own H2 with a short paragraph of proof.',
         structure: structure(
           'State the number and the payoff, e.g. "7 Reasons Why…". Lead with benefit.',
           'Frame the problem and tee up the list in a sentence or two.',
@@ -39,50 +44,28 @@ export const SEED_DATA: LandingPageType[] = [
           'Back the reason with one concrete proof point (a stat, mechanism, or detail).',
         ),
         examples: [
-          {
-            id: 'ex-reasons-sleep',
-            title: '5 Reasons Why (sleep supplement — sample)',
-            source: 'Sample copy',
-            approved: true,
-            notes: 'Strongest reason first; each H2 is a claim, each paragraph is one concrete proof.',
-            blocks: [
-              { type: 'H1', content: '5 Reasons Why People Are Switching to a Drug-Free Sleep Routine' },
-              {
-                type: 'Paragraph',
-                content:
-                  'If you lie awake replaying your day — or wake at 3am and can’t drift back off — you don’t need another prescription. Here’s why thousands are rebuilding their nights around a simple nightly ritual instead.',
-              },
-              { type: 'H2', content: 'You fall asleep faster — without feeling drugged' },
-              {
-                type: 'Paragraph',
-                content:
-                  'The blend leans on magnesium glycinate and L-theanine to quiet a racing mind rather than sedate you. Most people drift off in under 20 minutes within the first week.',
-              },
-              { type: 'H2', content: 'You wake up clear, not groggy' },
-              {
-                type: 'Paragraph',
-                content:
-                  'Because it works with your body’s own wind-down signals instead of overriding them, there’s no morning fog — the complaint that makes people quit sleep aids.',
-              },
-              { type: 'H2', content: 'It’s non-habit-forming' },
-              {
-                type: 'Paragraph',
-                content:
-                  'No dependency, no escalating doses, nothing to taper off. Use it every night or only on the rough ones.',
-              },
-              { type: 'H2', content: 'You’re not risking anything to try it' },
-              {
-                type: 'Paragraph',
-                content:
-                  'Every order is backed by a 60-night guarantee. Sleep on it for two months; if your nights aren’t better, get every penny back.',
-              },
-              { type: 'H2', content: 'It costs less than your morning coffee' },
-              {
-                type: 'Paragraph',
-                content: 'At about a dollar a night, better sleep costs less than the drink you reach for because you slept badly.',
-              },
-            ],
-          },
+          ex('H1', '5 Reasons Why People Are Switching to a Drug-Free Sleep Routine'),
+          ex('H1', '7 Reasons Your Morning Coffee Isn’t Working Anymore'),
+          ex('H2', 'You fall asleep faster — without feeling drugged'),
+          ex('H2', 'You wake up clear, not groggy'),
+          ex('H2', 'It’s non-habit-forming'),
+          ex('H2', 'You’re not risking anything to try it'),
+          ex(
+            'Paragraph',
+            'If you lie awake replaying your day — or wake at 3am and can’t drift back off — you don’t need another prescription. Here’s why thousands are rebuilding their nights around a simple nightly ritual instead.',
+            'Sample copy',
+            'Good intro paragraph: names the pain, teases the list.',
+          ),
+          ex(
+            'Paragraph',
+            'The blend leans on magnesium glycinate and L-theanine to quiet a racing mind rather than sedate you. Most people drift off in under 20 minutes within the first week.',
+            'Sample copy',
+            'Proof paragraph: one concrete mechanism + a specific result.',
+          ),
+          ex(
+            'Paragraph',
+            'Every order is backed by a 60-night guarantee. Sleep on it for two months; if your nights aren’t better, get every penny back.',
+          ),
         ],
       },
       {
@@ -96,39 +79,20 @@ export const SEED_DATA: LandingPageType[] = [
           'Who the pick is for, its standout feature, and one honest limitation.',
         ),
         examples: [
-          {
-            id: 'ex-roundup-blender',
-            title: 'Best blenders roundup (sample)',
-            source: 'Sample copy',
-            approved: true,
-            notes: 'Top pick first; each section names who it’s for and stays honest so #1 shines fairly.',
-            blocks: [
-              { type: 'H1', content: 'The 5 Best Blenders for Daily Smoothies in 2026' },
-              {
-                type: 'Paragraph',
-                content:
-                  'We ran twelve blenders through a month of morning smoothies, frozen fruit, and leafy greens. These five came out ahead — starting with the one we’d buy again.',
-              },
-              { type: 'H2', content: 'Best overall: the everyday workhorse' },
-              {
-                type: 'Paragraph',
-                content:
-                  'It crushed frozen berries and ice without leaving grit, and the jar wiped clean in seconds. Pricier than most here, but the one we reached for every morning.',
-              },
-              { type: 'H2', content: 'Best budget: nearly as good for half the price' },
-              {
-                type: 'Paragraph',
-                content:
-                  'Handles daily smoothies without complaint. The motor slows on very thick frozen blends, so add a splash more liquid.',
-              },
-              { type: 'H2', content: 'Best for small kitchens: compact and quiet' },
-              {
-                type: 'Paragraph',
-                content:
-                  'A personal-size jar that blends to-go and tucks into a drawer. Not built for big batches, but ideal for one.',
-              },
-            ],
-          },
+          ex('H1', 'The 5 Best Blenders for Daily Smoothies in 2026'),
+          ex('H2', 'Best overall: the everyday workhorse'),
+          ex('H2', 'Best budget: nearly as good for half the price'),
+          ex('H2', 'Best for small kitchens: compact and quiet'),
+          ex(
+            'Paragraph',
+            'We ran twelve blenders through a month of morning smoothies, frozen fruit, and leafy greens. These five came out ahead — starting with the one we’d buy again.',
+            'Sample copy',
+            'Methodology intro — establishes credibility.',
+          ),
+          ex(
+            'Paragraph',
+            'It crushed frozen berries and ice without leaving grit, and the jar wiped clean in seconds. Pricier than most here, but the one we reached for every morning.',
+          ),
         ],
       },
     ],
@@ -150,38 +114,26 @@ export const SEED_DATA: LandingPageType[] = [
           'Tell that beat of the story plainly; let the product emerge as the discovery.',
         ),
         examples: [
-          {
-            id: 'ex-adv-skincare',
-            title: 'Story advertorial (skincare — sample)',
-            source: 'Sample copy',
-            approved: true,
-            notes: 'Opens in-scene, lists failed fixes to pre-handle objections, then bridges to the mechanism.',
-            blocks: [
-              { type: 'H1', content: 'I Tried Everything for My Dry Winter Skin — Here’s the Only Thing That Finally Stuck' },
-              {
-                type: 'Paragraph',
-                content:
-                  'Every January my hands would crack at the knuckles — the kind of dry that stings when you wash a dish. I’d slather on lotion after lotion and by lunch it was like I’d applied nothing at all.',
-              },
-              {
-                type: 'Paragraph',
-                content:
-                  'I tried the drugstore stuff, the luxury stuff, the "clinical" stuff. Some felt nice for an hour. None of them lasted, and a few left my skin feeling tight and worse than before.',
-              },
-              { type: 'H2', content: 'Then a dermatologist told me I was moisturizing backwards' },
-              {
-                type: 'Paragraph',
-                content:
-                  'The problem wasn’t hydration — it was that nothing was holding it in. The fix was a barrier cream with ceramides and squalane that seals moisture in overnight instead of letting it evaporate.',
-              },
-              { type: 'H2', content: 'The first morning it actually worked' },
-              {
-                type: 'Paragraph',
-                content:
-                  'I woke up and my hands were still soft. That had never happened. Three weeks later I’ve stopped buying lotion entirely — I use it at night and I’m set until morning.',
-              },
-            ],
-          },
+          ex('H1', 'I Tried Everything for My Dry Winter Skin — Here’s the Only Thing That Finally Stuck'),
+          ex('H1', 'I Was Skeptical of "Smart" Water Bottles. Then Mine Fixed a Habit I’d Failed at for Years.'),
+          ex('H2', 'Then a dermatologist told me I was moisturizing backwards'),
+          ex('H2', 'The first morning it actually worked'),
+          ex(
+            'Paragraph',
+            'Every January my hands would crack at the knuckles — the kind of dry that stings when you wash a dish. I’d slather on lotion after lotion and by lunch it was like I’d applied nothing at all.',
+            'Sample copy',
+            'In-scene opener — specific and sensory.',
+          ),
+          ex(
+            'Paragraph',
+            'I tried the drugstore stuff, the luxury stuff, the "clinical" stuff. Some felt nice for an hour. None of them lasted, and a few left my skin feeling tight and worse than before.',
+            'Sample copy',
+            'Failed-attempts paragraph — pre-handles objections.',
+          ),
+          ex(
+            'Paragraph',
+            'The problem wasn’t hydration — it was that nothing was holding it in. The fix was a barrier cream with ceramides and squalane that seals moisture in overnight instead of letting it evaporate.',
+          ),
         ],
       },
       {
@@ -195,33 +147,21 @@ export const SEED_DATA: LandingPageType[] = [
           'Escalate the stakes, then turn to how the product resolves them.',
         ),
         examples: [
-          {
-            id: 'ex-pas-posture',
-            title: 'PAS advertorial (posture — sample)',
-            source: 'Sample copy',
-            approved: true,
-            notes: 'Problem → agitate the hidden cost → solve, one H2 per beat.',
-            blocks: [
-              { type: 'H1', content: 'That Nagging Upper-Back Ache Isn’t "Just Getting Older"' },
-              {
-                type: 'Paragraph',
-                content:
-                  'By mid-afternoon your shoulders creep toward the screen and the ache between your shoulder blades sets in. You stretch, you forget, it comes back.',
-              },
-              { type: 'H2', content: 'It’s quietly costing you more than comfort' },
-              {
-                type: 'Paragraph',
-                content:
-                  'Slouched hours compound into stiffer mornings, worse sleep, and the low-grade fatigue that makes everything harder. Left alone, it rarely fixes itself.',
-              },
-              { type: 'H2', content: 'The fix is a gentle reminder, not another gadget' },
-              {
-                type: 'Paragraph',
-                content:
-                  'A lightweight posture trainer buzzes softly when you slump, so you correct in the moment and build the habit in a couple of weeks — no rigid brace, no app to babysit.',
-              },
-            ],
-          },
+          ex('H1', 'That Nagging Upper-Back Ache Isn’t "Just Getting Older"'),
+          ex('H2', 'It’s quietly costing you more than comfort'),
+          ex('H2', 'The fix is a gentle reminder, not another gadget'),
+          ex(
+            'Paragraph',
+            'By mid-afternoon your shoulders creep toward the screen and the ache between your shoulder blades sets in. You stretch, you forget, it comes back.',
+            'Sample copy',
+            'Problem paragraph — precise enough that the reader feels seen.',
+          ),
+          ex(
+            'Paragraph',
+            'Slouched hours compound into stiffer mornings, worse sleep, and the low-grade fatigue that makes everything harder. Left alone, it rarely fixes itself.',
+            'Sample copy',
+            'Agitate paragraph — the hidden cost.',
+          ),
         ],
       },
     ],
@@ -243,33 +183,21 @@ export const SEED_DATA: LandingPageType[] = [
           'A specific, fair head-to-head for that factor — concede where they win.',
         ),
         examples: [
-          {
-            id: 'ex-vs-crm',
-            title: 'A vs B (software — sample)',
-            source: 'Sample copy',
-            approved: true,
-            notes: 'One H2 per criterion; concedes a point to stay credible.',
-            blocks: [
-              { type: 'H1', content: 'Acme vs Bolt: Which Project Tool Is Right for Your Team?' },
-              {
-                type: 'Paragraph',
-                content:
-                  'Both are solid — teams happily use each every day. The right pick depends on how big your team is and how much structure you want.',
-              },
-              { type: 'H2', content: 'Setup and onboarding' },
-              {
-                type: 'Paragraph',
-                content:
-                  'Acme gets a new team running in an afternoon with templates and sensible defaults. Bolt is more configurable up front, which helps large orgs but slows small teams down.',
-              },
-              { type: 'H2', content: 'Price' },
-              {
-                type: 'Paragraph',
-                content:
-                  'Bolt is cheaper at the entry tier — if budget is the deciding factor, they win it. Acme’s value shows up once you’re past a handful of seats.',
-              },
-            ],
-          },
+          ex('H1', 'Acme vs Bolt: Which Project Tool Is Right for Your Team?'),
+          ex('H2', 'Setup and onboarding'),
+          ex('H2', 'Price'),
+          ex(
+            'Paragraph',
+            'Both are solid — teams happily use each every day. The right pick depends on how big your team is and how much structure you want.',
+            'Sample copy',
+            'Framing intro — fit, not winner-take-all.',
+          ),
+          ex(
+            'Paragraph',
+            'Bolt is cheaper at the entry tier — if budget is the deciding factor, they win it. Acme’s value shows up once you’re past a handful of seats.',
+            'Sample copy',
+            'Head-to-head paragraph that concedes a point (credibility).',
+          ),
         ],
       },
     ],
@@ -290,39 +218,22 @@ export const SEED_DATA: LandingPageType[] = [
           'Specifics beat adjectives — narrate what using it was actually like.',
         ),
         examples: [
-          {
-            id: 'ex-review-headphones',
-            title: 'Product review (headphones — sample)',
-            source: 'Sample copy',
-            approved: true,
-            notes: 'Verdict up top, honest drawback section, concrete hands-on detail.',
-            blocks: [
-              { type: 'H1', content: 'Wave Pro Headphones Review: Worth It in 2026?' },
-              {
-                type: 'Paragraph',
-                content:
-                  'Short version: if you want all-day comfort and strong noise cancelling for the price, these are an easy recommendation. Bass-heads may want to look elsewhere.',
-              },
-              { type: 'H2', content: 'What’s good' },
-              {
-                type: 'Paragraph',
-                content:
-                  'Two weeks of eight-hour days and my ears never got sore. Noise cancelling flattened the coffee-shop hum and a full charge genuinely lasted the workweek.',
-              },
-              { type: 'H2', content: 'The drawbacks' },
-              {
-                type: 'Paragraph',
-                content:
-                  'The bass is polite rather than punchy, and the app’s EQ only partly fixes it. The case is also bigger than it needs to be.',
-              },
-              { type: 'H2', content: 'How they held up day to day' },
-              {
-                type: 'Paragraph',
-                content:
-                  'They paired instantly every morning, survived being crammed into a backpack, and the call quality held up on a windy walk — the test most headphones fail.',
-              },
-            ],
-          },
+          ex('H1', 'Wave Pro Headphones Review: Worth It in 2026?'),
+          ex('H2', 'What’s good'),
+          ex('H2', 'The drawbacks'),
+          ex('H2', 'How they held up day to day'),
+          ex(
+            'Paragraph',
+            'Short version: if you want all-day comfort and strong noise cancelling for the price, these are an easy recommendation. Bass-heads may want to look elsewhere.',
+            'Sample copy',
+            'Verdict paragraph up top.',
+          ),
+          ex(
+            'Paragraph',
+            'The bass is polite rather than punchy, and the app’s EQ only partly fixes it. The case is also bigger than it needs to be.',
+            'Sample copy',
+            'Honest drawbacks paragraph — credibility.',
+          ),
         ],
       },
     ],

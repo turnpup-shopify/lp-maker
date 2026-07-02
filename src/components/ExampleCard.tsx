@@ -7,54 +7,43 @@ interface Props {
   onEdit?: (example: CopyExample) => void;
 }
 
-// Renders one worked example as a plain document outline: the H1, then H2
-// sections with their paragraphs indented beneath. Each block is copyable on
-// hover, plus a "copy full example" action.
+// One approved-copy snippet within a category bucket.
 export function ExampleCard({ example, onDelete, onEdit }: Props) {
-  const fullText = example.blocks.map((b) => b.content).join('\n\n');
+  const isHeading = example.category !== 'Paragraph';
 
   return (
-    <article className="example-card">
-      <header className="example-card__head">
-        <div>
-          <h3 className="example-card__title">{example.title}</h3>
-          {example.source && <p className="example-card__source">{example.source}</p>}
-        </div>
-        <div className="example-card__badges">
-          {example.approved && <span className="badge badge--approved">Approved</span>}
-          {example.userAdded && <span className="badge badge--yours">Yours</span>}
-        </div>
-      </header>
-
-      {example.notes && <p className="example-card__notes">{example.notes}</p>}
-
-      <div className="outline">
-        {example.blocks.map((block, i) => (
-          <div className={`node node--${block.type.toLowerCase()}`} key={i}>
-            <div className="node__content">
-              {block.type === 'H1' && <p className="node__h1">{block.content}</p>}
-              {block.type === 'H2' && <p className="node__h2">{block.content}</p>}
-              {block.type === 'H3' && <p className="node__h3">{block.content}</p>}
-              {block.type === 'Paragraph' && <p className="node__p">{block.content}</p>}
-            </div>
-            <CopyButton text={block.content} className="copy-btn--ghost node__copy" />
-          </div>
-        ))}
+    <article className="snippet">
+      <div className="snippet__body">
+        <p className={isHeading ? 'snippet__heading' : 'snippet__para'}>{example.content}</p>
+        {(example.source || example.notes) && (
+          <p className="snippet__meta">
+            {example.source && <span>{example.source}</span>}
+            {example.source && example.notes && <span className="snippet__dot">·</span>}
+            {example.notes && <span className="snippet__notes">{example.notes}</span>}
+          </p>
+        )}
       </div>
 
-      <footer className="example-card__foot">
-        <CopyButton text={fullText} label="Copy full example" />
+      <div className="snippet__actions">
+        {example.userAdded && <span className="badge badge--yours">Yours</span>}
+        <CopyButton text={example.content} className="copy-btn--ghost" />
         {onEdit && example.userAdded && (
-          <button type="button" className="text-btn" onClick={() => onEdit(example)}>
-            Edit
+          <button type="button" className="icon-btn" title="Edit" aria-label="Edit" onClick={() => onEdit(example)}>
+            ✎
           </button>
         )}
         {onDelete && example.userAdded && (
-          <button type="button" className="text-btn text-btn--danger" onClick={() => onDelete(example.id)}>
-            Delete
+          <button
+            type="button"
+            className="icon-btn icon-btn--danger"
+            title="Delete"
+            aria-label="Delete"
+            onClick={() => onDelete(example.id)}
+          >
+            ✕
           </button>
         )}
-      </footer>
+      </div>
     </article>
   );
 }

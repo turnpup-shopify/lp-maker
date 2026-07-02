@@ -354,78 +354,91 @@
   line-height: 1.5;
 }
 
-/* Example rendered as a plain document outline. */
-.outline {
-  margin-top: 14px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 8px 6px;
+/* Category buckets: a list of approved-copy snippets. */
+.snippets {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
 }
 
-.node {
+.snippet {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 8px;
-  border-radius: 6px;
-  padding: 6px 8px;
-}
-
-.node:hover {
+  gap: 12px;
   background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
 }
 
-.node__content {
+.snippet:hover {
+  border-color: var(--border-strong);
+}
+
+.snippet__body {
   min-width: 0;
 }
 
-.node__h1 {
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.35;
-  color: var(--text);
-}
-
-.node__h2 {
+.snippet__heading {
   font-size: 15px;
   font-weight: 650;
   line-height: 1.4;
   color: var(--text);
 }
 
-.node__h3 {
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.4;
-  color: var(--text);
-}
-
-.node__p {
+.snippet__para {
   font-size: 14px;
   line-height: 1.6;
-  color: var(--text-muted);
+  color: var(--text);
   white-space: pre-wrap;
 }
 
-/* Indentation expresses the hierarchy: H2 sit under the H1, paragraphs and
-   H3 sit under their H2. */
-.node--h2 { padding-left: 18px; margin-top: 4px; }
-.node--h3 { padding-left: 34px; }
-.node--p { padding-left: 34px; }
+.snippet__meta {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--text-faint);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: baseline;
+}
 
-.node__copy {
-  opacity: 0;
+.snippet__notes {
+  font-style: italic;
+}
+
+.snippet__dot {
+  color: var(--border-strong);
+}
+
+.snippet__actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   flex-shrink: 0;
-  transition: opacity 0.12s;
 }
 
-.node:hover .node__copy {
-  opacity: 1;
+.icon-btn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1;
 }
 
-@media (hover: none) {
-  .node__copy { opacity: 1; }
+.icon-btn:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.icon-btn--danger:hover {
+  color: var(--danger);
+  border-color: var(--danger);
 }
 
 .example-card__foot {

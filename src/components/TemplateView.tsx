@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { BLOCK_LABELS } from '../types';
-import type { CopyExample, Template } from '../types';
+import { BLOCK_LABELS, CATEGORY_LABELS, EXAMPLE_CATEGORIES } from '../types';
+import type { CopyExample, ExampleCategory, Template } from '../types';
 import { ExampleCard } from './ExampleCard';
 import { AddExampleForm } from './AddExampleForm';
 
@@ -14,27 +14,23 @@ interface Props {
 
 function matches(example: CopyExample, q: string): boolean {
   if (!q) return true;
-  const hay = [example.title, example.source, example.notes, ...example.blocks.map((b) => b.content)]
-    .join(' ')
-    .toLowerCase();
-  return hay.includes(q.toLowerCase());
+  return [example.content, example.source, example.notes].join(' ').toLowerCase().includes(q.toLowerCase());
 }
 
 export function TemplateView({ template, typeName, query, onSave, onDelete }: Props) {
-  const [showForm, setShowForm] = useState(false);
+  // Which category's add-form is open, and the snippet being edited (if any).
+  const [adding, setAdding] = useState<ExampleCategory | null>(null);
   const [editing, setEditing] = useState<CopyExample | null>(null);
-
-  const visibleExamples = template.examples.filter((e) => matches(e, query));
 
   function handleSave(example: CopyExample) {
     onSave(example);
-    setShowForm(false);
+    setAdding(null);
     setEditing(null);
   }
 
   function startEdit(example: CopyExample) {
     setEditing(example);
-    setShowForm(true);
+    setAdding(example.category);
   }
 
   return (
@@ -62,44 +58,59 @@ export function TemplateView({ template, typeName, query, onSave, onDelete }: Pr
         </ol>
       </section>
 
-      <section className="panel">
-        <div className="panel__head">
-          <h2 className="panel__title">
-            Approved examples <span className="count">{template.examples.length}</span>
-          </h2>
-          {!showForm && (
-            <button type="button" className="btn btn--primary" onClick={() => { setEditing(null); setShowForm(true); }}>
-              + Add example
-            </button>
-          )}
-        </div>
+      {EXAMPLE_CATEGORIES.map((category) => {
+        const all = template.examples.filter((e) => e.category === category);
+        const visible = all.filter((e) => matches(e, query));
+        const formOpenHere = adding === category;
 
-        {showForm && (
-          <AddExampleForm
-            template={template}
-            initial={editing}
-            onSave={handleSave}
-            onCancel={() => { setShowForm(false); setEditing(null); }}
-          />
-        )}
+        return (
+          <section className="panel" key={category}>
+            <div className="panel__head">
+              <h2 className="panel__title">
+                {CATEGORY_LABELS[category]} <span className="count">{all.length}</span>
+              </h2>
+              {!formOpenHere && (
+                <button
+                  type="button"
+                  className="btn btn--primary"
+                  onClick={() => {
+                    setEditing(null);
+                    setAdding(category);
+                  }}
+                >
+                  + Add {category === 'Paragraph' ? 'paragraph' : category}
+                </button>
+              )}
+            </div>
 
-        {template.examples.length === 0 && !showForm && (
-          <div className="empty">
-            <p>No examples yet for this template.</p>
-            <p className="empty__hint">Add your first approved example to start the library.</p>
-          </div>
-        )}
+            {formOpenHere && (
+              <AddExampleForm
+                category={category}
+                initial={editing}
+                onSave={handleSave}
+                onCancel={() => {
+                  setAdding(null);
+                  setEditing(null);
+                }}
+              />
+            )}
 
-        {query && visibleExamples.length === 0 && template.examples.length > 0 && (
-          <p className="empty__hint">No examples match “{query}”.</p>
-        )}
+            {all.length === 0 && !formOpenHere && (
+              <p className="empty__hint">No {category === 'Paragraph' ? 'paragraph' : category} examples yet.</p>
+            )}
 
-        <div className="examples">
-          {visibleExamples.map((ex) => (
-            <ExampleCard key={ex.id} example={ex} onDelete={onDelete} onEdit={startEdit} />
-          ))}
-        </div>
-      </section>
+            {query && all.length > 0 && visible.length === 0 && (
+              <p className="empty__hint">No matches for “{query}”.</p>
+            )}
+
+            <div className="snippets">
+              {visible.map((e) => (
+                <ExampleCard key={e.id} example={e} onDelete={onDelete} onEdit={startEdit} />
+              ))}
+            </div>
+          </section>
+        );
+      })}
     </div>
   );
 }
